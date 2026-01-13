@@ -16,20 +16,17 @@ function About({ onBackClick, isVisible }: AboutProps) {
             <div className="about-container">
                 <a href="#home" className="back-link" onClick={handleBackClick}>← Back</a>
                 <div className="about-content">
-                    <h1 className="about-title">About Me</h1>
+                    <h1 className="about-title">Welcome!</h1>
                     <div className="about-text">
                         <p>
-                            Welcome! I'm a software engineer passionate about building meaningful
-                            applications and solving complex problems. I enjoy working with modern
-                            technologies and creating user-friendly experiences.
+                            My name is Duy Nguyen. I'm a software engineer that loves to build!
                         </p>
                         <p>
-                            This is a space where I share my thoughts, projects, and experiences.
-                            Feel free to explore my work and reach out if you'd like to connect!
+                            I'm a big fan of Nintendo hence the switch theme. I'd like to make this a Wii U theme one day,
+                            similar to Wara Wara Plaza. However, I'm not goated at 3D modeling yet. But, I plan on tackling that soon.
                         </p>
                         <p>
-                            You can update this content to write more about yourself, your background,
-                            interests, and anything else you'd like to share.
+                            I have many passions and hobbies outside of coding as well. Feel free to reach out if you'd like to connect!
                         </p>
                     </div>
                 </div>

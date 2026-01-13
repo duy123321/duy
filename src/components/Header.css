@@ -56,11 +56,34 @@
   gap: 20px;
 }
 
+.social-icons {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.social-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+  opacity: 0.9;
+}
+
+.social-icon:hover {
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+.social-icon svg {
+  width: 24px;
+  height: 24px;
+}
+
 .time-display {
-  color: white;
+  color: #000000;
   font-size: 18px;
   font-weight: 500;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .battery-indicator {

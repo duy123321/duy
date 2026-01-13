@@ -9,9 +9,10 @@ interface TileRowProps {
     onSelect: (index: number) => void
     onActionClick: (actionIndex: number) => void
     selectedActionIndex: number
+    onTileClick: (tile: Tile) => void
 }
 
-function TileRow({ games, selectedIndex, onSelect, onActionClick, selectedActionIndex }: TileRowProps) {
+function TileRow({ games, selectedIndex, onSelect, onActionClick, selectedActionIndex, onTileClick }: TileRowProps) {
     const getImageUrl = (imagePath: string): string => {
         try {
             const cleanPath = imagePath.startsWith('/') ? imagePath.slice(1) : imagePath
@@ -74,7 +75,15 @@ function TileRow({ games, selectedIndex, onSelect, onActionClick, selectedAction
                     <div
                         key={game.id}
                         ref={index === selectedIndex ? selectedRef : null}
-                        onClick={() => onSelect(index)}
+                        onClick={() => {
+                            if (index === selectedIndex) {
+                                // If clicking the already selected tile, open detail page
+                                onTileClick(game)
+                            } else {
+                                // Otherwise, select the tile
+                                onSelect(index)
+                            }
+                        }}
                     >
                         <SelectableTile
                             tile={game}
