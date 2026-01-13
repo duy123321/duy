@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import './App.css'
 import Header from './components/Header'
 import GameGrid from './components/TileRow'
+import About from './pages/About'
 import type { Tile } from './types'
 
 const workTiles: Tile[] = [
@@ -24,6 +25,7 @@ function App() {
     const [selectedIndex, setSelectedIndex] = useState<number>(0)
     const [selectedRow, setSelectedRow] = useState<Tile[]>(workTiles)
     const [selectedActionIndex, setSelectedActionIndex] = useState<number>(0)
+    const [currentView, setCurrentView] = useState<'home' | 'about'>('home')
 
     const handleActionClick = (actionIndex: number): void => {
         const rowMap: Tile[][] = [
@@ -54,14 +56,23 @@ function App() {
     }, [selectedIndex, selectedRow.length])
 
     return (
-        <div className="app">
-            <Header />
-            <GameGrid
-                games={selectedRow}
-                selectedIndex={selectedIndex}
-                onSelect={setSelectedIndex}
-                onActionClick={handleActionClick}
-                selectedActionIndex={selectedActionIndex}
+        <div className="app-wrapper">
+            <div
+                className={`app ${currentView === 'home' ? 'visible' : 'hidden'}`}
+                id="home"
+            >
+                <Header onProfileClick={() => setCurrentView('about')} />
+                <GameGrid
+                    games={selectedRow}
+                    selectedIndex={selectedIndex}
+                    onSelect={setSelectedIndex}
+                    onActionClick={handleActionClick}
+                    selectedActionIndex={selectedActionIndex}
+                />
+            </div>
+            <About
+                onBackClick={() => setCurrentView('home')}
+                isVisible={currentView === 'about'}
             />
         </div>
     )

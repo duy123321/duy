@@ -1,7 +1,11 @@
 import { useState, useEffect } from 'react'
 import './Header.css'
 
-function Header() {
+interface HeaderProps {
+  onProfileClick: () => void
+}
+
+function Header({ onProfileClick }: HeaderProps) {
   const [time, setTime] = useState<Date>(new Date())
   const [battery, setBattery] = useState<number>(100)
 
@@ -42,11 +46,18 @@ function Header() {
     }
   }
 
+  const handleProfileClick = (e: React.MouseEvent<HTMLAnchorElement>): void => {
+    e.preventDefault()
+    onProfileClick()
+  }
+
   return (
     <header className="header">
       <div className="header-left">
         <div className="user-profile">
-          <div className="profile-avatar"><img src={getImageUrl('resources/mii.png')} alt="Profile" /></div>
+          <a href="#about" className="profile-link" onClick={handleProfileClick}>
+            <div className="profile-avatar"><img src={getImageUrl('resources/mii.png')} alt="Profile" /></div>
+          </a>
         </div>
       </div>
       <div className="header-right">

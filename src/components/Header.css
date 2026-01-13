@@ -17,6 +17,11 @@
   align-items: center;
 }
 
+.profile-link {
+  text-decoration: none;
+  display: inline-block;
+}
+
 .profile-avatar {
   width: 100px;
   height: 100px;
