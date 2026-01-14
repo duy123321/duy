@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { Routes, Route, useNavigate, useParams } from 'react-router-dom'
 import './App.css'
 import Header from './components/Header'
 import GameGrid from './components/TileRow'
@@ -27,12 +28,33 @@ const schoolTiles: Tile[] = [
 ]
 
 
-function App() {
+// Helper to convert title to URL slug
+const titleToSlug = (title: string): string => {
+    return title.toLowerCase().replace(/\s+/g, '-')
+}
+
+// Home page component
+function HomePage({ initialCategory }: { initialCategory?: string }) {
+    const navigate = useNavigate()
+
+    // Determine initial state based on category
+    const getCategoryIndex = (category?: string): number => {
+        if (category === 'work') return 0
+        if (category === 'projects') return 1
+        if (category === 'school') return 2
+        return 0
+    }
+
+    const getCategoryTiles = (category?: string): Tile[] => {
+        if (category === 'work') return workTiles
+        if (category === 'projects') return personalProjectTiles
+        if (category === 'school') return schoolTiles
+        return workTiles
+    }
+
     const [selectedIndex, setSelectedIndex] = useState<number>(0)
-    const [selectedRow, setSelectedRow] = useState<Tile[]>(workTiles)
-    const [selectedActionIndex, setSelectedActionIndex] = useState<number>(0)
-    const [currentView, setCurrentView] = useState<'home' | 'about' | 'tile'>('home')
-    const [selectedTile, setSelectedTile] = useState<Tile | null>(null)
+    const [selectedRow, setSelectedRow] = useState<Tile[]>(getCategoryTiles(initialCategory))
+    const [selectedActionIndex, setSelectedActionIndex] = useState<number>(getCategoryIndex(initialCategory))
 
     const handleActionClick = (actionIndex: number): void => {
         const rowMap: Tile[][] = [
@@ -40,13 +62,21 @@ function App() {
             personalProjectTiles,
             schoolTiles,
         ]
+        const categoryMap = ['work', 'projects', 'school']
 
         const selectedTiles = rowMap[actionIndex]
         if (selectedTiles !== undefined) {
             setSelectedRow(selectedTiles)
             setSelectedIndex(0)
             setSelectedActionIndex(actionIndex)
+            // Update URL to reflect category
+            navigate(`/${categoryMap[actionIndex]}`)
         }
+    }
+
+    const handleTileClick = (tile: Tile): void => {
+        const slug = titleToSlug(tile.title)
+        navigate(`/${tile.category}/${slug}`)
     }
 
     useEffect(() => {
@@ -63,70 +93,82 @@ function App() {
     }, [selectedIndex, selectedRow.length])
 
     return (
+        <div className="app" id="home">
+            <Header onProfileClick={() => navigate('/about')} />
+            <GameGrid
+                games={selectedRow}
+                selectedIndex={selectedIndex}
+                onSelect={setSelectedIndex}
+                onActionClick={handleActionClick}
+                selectedActionIndex={selectedActionIndex}
+                onTileClick={handleTileClick}
+            />
+        </div>
+    )
+}
+
+// Tile detail page wrapper
+function TileDetailPage() {
+    const { category, tile } = useParams<{ category: string; tile: string }>()
+    const navigate = useNavigate()
+
+    const handleBackClick = (): void => {
+        // Navigate back to the category page
+        navigate(`/${category}`)
+    }
+
+    if (!category || !tile) {
+        return null
+    }
+
+    const key = `${category}/${tile}`
+
+    // Render the appropriate component based on URL params
+    return (
+        <>
+            {key === 'work/atlassian' && <Atlassian onBackClick={handleBackClick} isVisible={true} />}
+            {key === 'work/caci' && <CACI onBackClick={handleBackClick} isVisible={true} />}
+            {key === 'work/peraton' && <Peraton onBackClick={handleBackClick} isVisible={true} />}
+            {key === 'projects/noi' && <Noi onBackClick={handleBackClick} isVisible={true} />}
+            {key === 'projects/flappy-bird-ai' && <FlappyBirdAI onBackClick={handleBackClick} isVisible={true} />}
+            {key === 'school/virginia-tech' && <VirginiaTech onBackClick={handleBackClick} isVisible={true} />}
+        </>
+    )
+}
+
+// About page wrapper
+function AboutPage() {
+    const navigate = useNavigate()
+
+    return (
+        <About
+            onBackClick={() => navigate('/')}
+            isVisible={true}
+        />
+    )
+}
+
+// Category page wrapper
+function CategoryPage() {
+    const { category } = useParams<{ category: string }>()
+
+    // Validate category
+    if (!category || !['work', 'projects', 'school'].includes(category)) {
+        return <HomePage />
+    }
+
+    return <HomePage initialCategory={category} />
+}
+
+function App() {
+    return (
         <div className="app-wrapper">
-            <div
-                className={`app ${currentView === 'home' ? 'visible' : 'hidden'}`}
-                id="home"
-            >
-                <Header onProfileClick={() => setCurrentView('about')} />
-                <GameGrid
-                    games={selectedRow}
-                    selectedIndex={selectedIndex}
-                    onSelect={setSelectedIndex}
-                    onActionClick={handleActionClick}
-                    selectedActionIndex={selectedActionIndex}
-                    onTileClick={(tile) => {
-                        setSelectedTile(tile)
-                        setCurrentView('tile')
-                    }}
-                />
-            </div>
-            <About
-                onBackClick={() => setCurrentView('home')}
-                isVisible={currentView === 'about'}
-            />
-            <Atlassian
-                onBackClick={() => {
-                    setCurrentView('home')
-                    setTimeout(() => setSelectedTile(null), 600)
-                }}
-                isVisible={currentView === 'tile' && selectedTile?.title === 'Atlassian'}
-            />
-            <CACI
-                onBackClick={() => {
-                    setCurrentView('home')
-                    setTimeout(() => setSelectedTile(null), 600)
-                }}
-                isVisible={currentView === 'tile' && selectedTile?.title === 'CACI'}
-            />
-            <Peraton
-                onBackClick={() => {
-                    setCurrentView('home')
-                    setTimeout(() => setSelectedTile(null), 600)
-                }}
-                isVisible={currentView === 'tile' && selectedTile?.title === 'Peraton'}
-            />
-            <Noi
-                onBackClick={() => {
-                    setCurrentView('home')
-                    setTimeout(() => setSelectedTile(null), 600)
-                }}
-                isVisible={currentView === 'tile' && selectedTile?.title === 'Noi'}
-            />
-            <FlappyBirdAI
-                onBackClick={() => {
-                    setCurrentView('home')
-                    setTimeout(() => setSelectedTile(null), 600)
-                }}
-                isVisible={currentView === 'tile' && selectedTile?.title === 'Flappy Bird AI'}
-            />
-            <VirginiaTech
-                onBackClick={() => {
-                    setCurrentView('home')
-                    setTimeout(() => setSelectedTile(null), 600)
-                }}
-                isVisible={currentView === 'tile' && selectedTile?.title === 'Virginia Tech'}
-            />
+            <Routes>
+                <Route path="/" element={<HomePage />} />
+                <Route path="/about" element={<AboutPage />} />
+                <Route path="/:category" element={<CategoryPage />} />
+                <Route path="/:category/:tile" element={<TileDetailPage />} />
+            </Routes>
         </div>
     )
 }

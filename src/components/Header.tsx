@@ -63,7 +63,7 @@ function Header({ onProfileClick }: HeaderProps) {
       <div className="header-right">
         <div className="social-icons">
           <a
-            href="https://github.com"
+            href="https://github.com/duy123321"
             target="_blank"
             rel="noopener noreferrer"
             className="social-icon"
@@ -74,7 +74,7 @@ function Header({ onProfileClick }: HeaderProps) {
             </svg>
           </a>
           <a
-            href="https://linkedin.com"
+            href="https://www.linkedin.com/in/duynguyen22/"
             target="_blank"
             rel="noopener noreferrer"
             className="social-icon"
@@ -85,7 +85,7 @@ function Header({ onProfileClick }: HeaderProps) {
             </svg>
           </a>
           <a
-            href="https://instagram.com"
+            href="https://www.instagram.com/duynquy3n/"
             target="_blank"
             rel="noopener noreferrer"
             className="social-icon"
