@@ -89,3 +89,12 @@
 .tile-detail-text p:last-child {
     margin-bottom: 0;
 }
+
+@keyframes loading {
+    0% {
+        background-position: 200% 0;
+    }
+    100% {
+        background-position: -200% 0;
+    }
+}
